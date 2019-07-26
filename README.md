@@ -1,7 +1,9 @@
 Engarde
 =======
 
-[![Build Status](https://travis-ci.org/TomAugspurger/engarde.svg)](https://travis-ci.org/TomAugspurger/engarde)
+[![Build Status](https://travis-ci.org/engarde-dev/engarde.svg)](https://travis-ci.org/engarde-dev/engarde)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 
 A python package for defensive data analysis.
 Documentation is at [readthedocs](http://engarde.readthedocs.org/en/latest/).
