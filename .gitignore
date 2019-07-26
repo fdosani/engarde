@@ -62,6 +62,7 @@ target/
 
 # Editor
 .vscode/
+.idea/
 *.swp
 
 # other
@@ -69,4 +70,3 @@ data/
 wheelhouse/
 *.zip
 *.csv
-
