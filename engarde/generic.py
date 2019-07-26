@@ -12,6 +12,7 @@ import pandas as pd
 # Generic verify
 # --------------
 
+
 def verify(df, check, *args, **kwargs):
     """
     Generic verify. Assert that ``check(df, *args, **kwargs)`` is
@@ -32,10 +33,11 @@ def verify(df, check, *args, **kwargs):
     try:
         assert result
     except AssertionError as e:
-        msg = '{} is not true'.format(check.__name__)
+        msg = "{} is not true".format(check.__name__)
         e.args = (msg, df)
         raise
     return df
+
 
 def verify_all(df, check, *args, **kwargs):
     """
@@ -51,6 +53,7 @@ def verify_all(df, check, *args, **kwargs):
         raise
     return df
 
+
 def verify_any(df, check, *args, **kwargs):
     """
     Verify that any of the entries in ``check(df, *args, **kwargs)``
@@ -60,14 +63,16 @@ def verify_any(df, check, *args, **kwargs):
     try:
         assert np.any(result)
     except AssertionError as e:
-        msg = '{} not true for any'.format(check.__name__)
+        msg = "{} not true for any".format(check.__name__)
         e.args = (msg, df)
         raise
     return df
 
+
 # ---------------
 # Error reporting
 # ---------------
+
 
 def bad_locations(df):
     columns = df.columns
@@ -76,5 +81,5 @@ def bad_locations(df):
     msg = bad.values
     return msg
 
-__all__ = ['verify', 'verify_all', 'verify_any', 'bad_locations']
 
+__all__ = ["verify", "verify_all", "verify_any", "bad_locations"]

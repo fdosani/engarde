@@ -43,6 +43,7 @@ def none_missing(df, columns=None):
         raise
     return df
 
+
 def is_monotonic(df, items=None, increasing=None, strict=False):
     """
     Asserts that the DataFrame is monotonic.
@@ -67,22 +68,25 @@ def is_monotonic(df, items=None, increasing=None, strict=False):
     for col, (increasing, strict) in items.items():
         s = pd.Index(df[col])
         if increasing:
-            good = getattr(s, 'is_monotonic_increasing')
+            good = getattr(s, "is_monotonic_increasing")
         elif increasing is None:
-            good = getattr(s, 'is_monotonic') | getattr(s, 'is_monotonic_decreasing')
+            good = getattr(s, "is_monotonic") | getattr(s, "is_monotonic_decreasing")
         else:
-            good = getattr(s, 'is_monotonic_decreasing')
+            good = getattr(s, "is_monotonic_decreasing")
         if strict:
             if increasing:
                 good = good & (s.to_series().diff().dropna() > 0).all()
             elif increasing is None:
-                good = good & ((s.to_series().diff().dropna() > 0).all() |
-                               (s.to_series().diff().dropna() < 0).all())
+                good = good & (
+                    (s.to_series().diff().dropna() > 0).all()
+                    | (s.to_series().diff().dropna() < 0).all()
+                )
             else:
                 good = good & (s.to_series().diff().dropna() < 0).all()
         if not good:
             raise AssertionError
     return df
+
 
 def is_shape(df, shape):
     """
@@ -101,12 +105,13 @@ def is_shape(df, shape):
     df : DataFrame
     """
     try:
-        check = np.all(np.equal(df.shape, shape) | (np.equal(shape, [-1, -1]) |
-                                                    np.equal(shape, [None, None])))
+        check = np.all(
+            np.equal(df.shape, shape)
+            | (np.equal(shape, [-1, -1]) | np.equal(shape, [None, None]))
+        )
         assert check
     except AssertionError as e:
-        msg = ("Expected shape: {}\n"
-               "\t\tActual shape:   {}".format(shape, df.shape))
+        msg = "Expected shape: {}\n" "\t\tActual shape:   {}".format(shape, df.shape)
         e.args = (msg,)
         raise
     return df
@@ -173,8 +178,9 @@ def within_set(df, items=None):
     for k, v in items.items():
         if not df[k].isin(v).all():
             bad = df.loc[~df[k].isin(v), k]
-            raise AssertionError('Not in set', bad)
+            raise AssertionError("Not in set", bad)
     return df
+
 
 def within_range(df, items=None):
     """
@@ -197,6 +203,7 @@ def within_range(df, items=None):
             raise AssertionError("Outside range", bad)
     return df
 
+
 def within_n_std(df, n=3):
     """
     Assert that every value is within ``n`` standard
@@ -214,11 +221,12 @@ def within_n_std(df, n=3):
     """
     means = df.mean()
     stds = df.std()
-    inliers = (np.abs(df[means.index] - means) < n * stds)
+    inliers = np.abs(df[means.index] - means) < n * stds
     if not np.all(inliers):
         msg = generic.bad_locations(~inliers)
         raise AssertionError(msg)
     return df
+
 
 def has_dtypes(df, items):
     """
@@ -237,7 +245,11 @@ def has_dtypes(df, items):
     dtypes = df.dtypes
     for k, v in items.items():
         if not dtypes[k] == v:
-            raise AssertionError("{} has the wrong dtype. Should be ({}), is ({})".format(k, v,dtypes[k]))
+            raise AssertionError(
+                "{} has the wrong dtype. Should be ({}), is ({})".format(
+                    k, v, dtypes[k]
+                )
+            )
     return df
 
 
@@ -295,7 +307,19 @@ def is_same_as(df, df_to_compare, **kwargs):
     return df
 
 
-__all__ = ['is_monotonic', 'is_same_as', 'is_shape', 'none_missing',
-           'unique_index', 'within_n_std', 'within_range', 'within_set',
-           'has_dtypes', 'verify', 'verify_all', 'verify_any',
-           'one_to_many','is_same_as',]
+__all__ = [
+    "is_monotonic",
+    "is_same_as",
+    "is_shape",
+    "none_missing",
+    "unique_index",
+    "within_n_std",
+    "within_range",
+    "within_set",
+    "has_dtypes",
+    "verify",
+    "verify_all",
+    "verify_any",
+    "one_to_many",
+    "is_same_as",
+]

@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
-from __future__ import (unicode_literals, absolute_import, division)
+from __future__ import unicode_literals, absolute_import, division
 
 from functools import wraps
 
 import engarde.checks as ck
 
+
 def none_missing(columns=None):
     """Asserts that no missing values (NaN) are found"""
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             ck.none_missing(result, columns=columns)
             return result
+
         return wrapper
+
     return decorate
 
 
@@ -24,7 +28,9 @@ def is_shape(shape):
             result = func(*args, **kwargs)
             ck.is_shape(result, shape)
             return result
+
         return wrapper
+
     return decorate
 
 
@@ -32,13 +38,16 @@ def unique(columns=None):
     """
     Asserts that columns in the DataFrame only have unique values.
     """
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             ck.unique(result, columns=columns)
             return result
+
         return wrapper
+
     return decorate
 
 
@@ -49,19 +58,24 @@ def unique_index():
             result = func(*args, **kwargs)
             ck.unique_index(result)
             return result
+
         return wrapper
+
     return decorate
+
 
 def is_monotonic(items=None, increasing=None, strict=False):
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
-            ck.is_monotonic(result, items=items, increasing=increasing,
-                            strict=strict)
+            ck.is_monotonic(result, items=items, increasing=increasing, strict=strict)
             return result
+
         return wrapper
+
     return decorate
+
 
 def within_set(items):
     """
@@ -71,13 +85,16 @@ def within_set(items):
     >>> def f(df):
             return df
     """
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             ck.within_set(result, items)
             return result
+
         return wrapper
+
     return decorate
 
 
@@ -92,13 +109,16 @@ def within_range(items):
         array-like checks the same (lower, upper) for each column
 
     """
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             ck.within_range(result, items)
             return result
+
         return wrapper
+
     return decorate
 
 
@@ -107,26 +127,33 @@ def within_n_std(n=3):
     Tests that all values are within 3 standard deviations
     of their mean.
     """
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             ck.within_n_std(result, n=n)
             return result
+
         return wrapper
+
     return decorate
+
 
 def has_dtypes(items):
     """
     Tests that the dtypes are as specified in items.
     """
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             ck.has_dtypes(result, items)
             return result
+
         return wrapper
+
     return decorate
 
 
@@ -134,13 +161,16 @@ def one_to_many(unitcol, manycol):
     """ Tests that each value in ``manycol`` only is associated with
     just a single value in ``unitcol``.
     """
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             ck.one_to_many(result, unitcol, manycol)
             return result
+
         return wrapper
+
     return decorate
 
 
@@ -150,20 +180,23 @@ def verify(func, *args, **kwargs):
     """
     return _verify(func, None, *args, **kwargs)
 
+
 def verify_all(func, *args, **kwargs):
     """
     Assert that all of `func(*args, **kwargs)` are true.
     """
-    return _verify(func, 'all', *args, **kwargs)
+    return _verify(func, "all", *args, **kwargs)
+
 
 def verify_any(func, *args, **kwargs):
     """
     Assert that any of `func(*args, **kwargs)` are true.
     """
-    return _verify(func, 'any', *args, **kwargs)
+    return _verify(func, "any", *args, **kwargs)
+
 
 def _verify(func, _kind, *args, **kwargs):
-    d = {None: ck.verify, 'all': ck.verify_all, 'any': ck.verify_any}
+    d = {None: ck.verify, "all": ck.verify_all, "any": ck.verify_any}
     vfunc = d[_kind]
 
     def decorate(operation_func):
@@ -172,7 +205,9 @@ def _verify(func, _kind, *args, **kwargs):
             result = operation_func(*operation_args, **operation_kwargs)
             vfunc(result, func, *args, **kwargs)
             return result
+
         return wrapper
+
     return decorate
 
 
@@ -183,12 +218,25 @@ def is_same_as(df_to_compare, **assert_kwargs):
             result = func(*args, **kwargs)
             ck.is_same_as(result, df_to_compare, **assert_kwargs)
             return result
+
         return wrapper
+
     return decorate
 
 
-__all__ = ['is_monotonic', 'is_same_as', 'is_shape', 'none_missing',
-           'unique_index', 'within_range', 'within_set', 'has_dtypes',
-           'verify', 'verify_all', 'verify_any', 'within_n_std',
-           'one_to_many','is_same_as',]
-
+__all__ = [
+    "is_monotonic",
+    "is_same_as",
+    "is_shape",
+    "none_missing",
+    "unique_index",
+    "within_range",
+    "within_set",
+    "has_dtypes",
+    "verify",
+    "verify_all",
+    "verify_any",
+    "within_n_std",
+    "one_to_many",
+    "is_same_as",
+]
